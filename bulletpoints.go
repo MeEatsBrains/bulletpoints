@@ -19,7 +19,7 @@ const (
 )
 
 // Simu is the interface to access the bullseye loot event simulation, a valid implementation
-// of this interface me be obtained by callinge NewSimu
+// of this interface me be obtained by calling NewSimu
 type Simu interface {
 	Simulate(seed int) int
 }

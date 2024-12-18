@@ -10,14 +10,14 @@ The simulation uses the rules as specified in the game info.
 
 ![image](rules.png)
 
-The rule specify a  weight increase for a major prize after a few attemtps for each level and a certain win condition if a specific number of attempts have been made.
+The rule specify a  weight increase for a major prize after a few attempts for each level and a certain win condition if a specific number of attempts have been made.
 
 ## Results
 The histogram output of the simulation:
 ![image](histo.png)
 
-The propability output of the simulation:
-![image](propability.png)
+The probability output of the simulation:
+![image](probability.png)
 
 The output:
 ```
@@ -26,7 +26,7 @@ best case: 100 bullets
 worst case: 780 bullets
 average bullet count over 100000 simulations: 434.48365 bullets
 now generating histo.png
-now generating propability.png
+now generating probability.png
 chance of 10 % exceeded with 413 bullets
 chance of 20 % exceeded with 420 bullets
 chance of 30 % exceeded with 426 bullets

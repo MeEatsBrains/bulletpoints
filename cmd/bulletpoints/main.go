@@ -146,7 +146,7 @@ func generatePlotAndPrintBreakPoints(simulationRes *simulationResult, fileName s
 		return fmt.Errorf("add lines: %w", err)
 	}
 	if err := p.Save(20*vg.Centimeter, 14*vg.Centimeter, fileName); err != nil {
-		return fmt.Errorf("failed to save propability: %w", err)
+		return fmt.Errorf("failed to save probability: %w", err)
 	}
 
 	return nil
@@ -155,7 +155,7 @@ func generatePlotAndPrintBreakPoints(simulationRes *simulationResult, fileName s
 func main() {
 	const SIMULATION_COUNT = 100000
 	const HISTOGRAM_FILE_NAME = "histo.png"
-	const PROPABILITY_FILE_NAME = "propability.png"
+	const PROBABILITY_FILE_NAME = "probability.png"
 
 	fmt.Printf("starting simulation with %d runs\n", SIMULATION_COUNT)
 	simulationRes, err := simulate(SIMULATION_COUNT)
@@ -171,9 +171,9 @@ func main() {
 		fmt.Printf("WARNING: failed to generate histogram: %v", err)
 	}
 
-	fmt.Printf("now generating %s\n", PROPABILITY_FILE_NAME)
-	err = generatePlotAndPrintBreakPoints(simulationRes, PROPABILITY_FILE_NAME)
+	fmt.Printf("now generating %s\n", PROBABILITY_FILE_NAME)
+	err = generatePlotAndPrintBreakPoints(simulationRes, PROBABILITY_FILE_NAME)
 	if err != nil {
-		fmt.Printf("WARNING: failed to generate propability plot: %v", err)
+		fmt.Printf("WARNING: failed to generate probability plot: %v", err)
 	}
 }
