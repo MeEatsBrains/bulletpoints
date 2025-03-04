@@ -27,7 +27,7 @@ It's quite obvious that the recorded data (green dots) exceed the expected value
 
 The rules don't state what happens to the minor price targets if they are hit. More bullets are of course needed if these targets stay in game. If one keeps the target active even after a hit one gets the following result:
 
-![image](run_comparison_target_not_removed.png)
+![image](run_comparison_targets_not_removed.png)
 This still overshoots the median value of the expectation in almost every case.
 
 One can also try to skip the promised weight increase for major targets from rule #5.
