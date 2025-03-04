@@ -21,24 +21,39 @@ const (
 // Simu is the interface to access the bullseye loot event simulation, a valid implementation
 // of this interface me be obtained by calling NewSimu
 type Simu interface {
-	Simulate(seed int) int
+	// Simulate calculates the number of bullets required to reach stage 100
+	// in addition return the bullets used per stage
+	Simulate(seed int) (int, []int)
+}
+
+type RuleAlterations struct {
+	NoPromisedWeightIncrease bool
+	DontRemoveHitTargets     bool
 }
 
 // simuImpl is the internal implementation of the Simu interface.
 type simuImpl struct {
-	mode SimuMode
-	r    *rand.Rand
+	mode            SimuMode
+	ruleAlterations RuleAlterations
+	r               *rand.Rand
 }
 
 // NewSimu generates a new simulation interface
-func NewSimu(mode SimuMode) Simu {
+func NewSimu(mode SimuMode, optRuleAlterations *RuleAlterations) Simu {
+	ruleAlterions := RuleAlterations{}
+	if optRuleAlterations != nil {
+		ruleAlterions = *optRuleAlterations
+	}
+
 	return &simuImpl{
-		mode: mode,
+		mode:            mode,
+		ruleAlterations: ruleAlterions,
 	}
 }
 
 // Simulate calculates the number of bullets required to reach stage 100
-func (s *simuImpl) Simulate(seed int) int {
+// in addition return the bullets used per stage
+func (s *simuImpl) Simulate(seed int) (int, []int) {
 	// either specify a seed or seed with the time if 0 is given
 	if seed == 0 {
 		seed = int(time.Now().UnixMicro())
@@ -48,15 +63,20 @@ func (s *simuImpl) Simulate(seed int) int {
 	src := rand.NewSource(int64(seed))
 	s.r = rand.New(src)
 
-	// bullets will hold the total number of required bullets
-	bullets := 0
+	// bulletsTotal will hold the total number of required bullets
+	bulletsTotal := 0
 
+	const stageCount = 100
+
+	stages := make([]int, stageCount)
 	// iterate over the 100 stages and add the amount of bullets used, stage is 0 based, i.e. it goes from 0 to 99
-	for stage := range 100 {
-		bullets += s.simulateStage(stage)
+	for stage := range stageCount {
+		bullets := s.simulateStage(stage)
+		stages[stage] = bullets
+		bulletsTotal += bullets
 	}
 
-	return bullets
+	return bulletsTotal, stages
 }
 
 // simulateStage returns the bullets used up in a single stage, stage is expected to be zero based so 0 is what the
@@ -76,15 +96,22 @@ func (s *simuImpl) simulateStage(stage int) int {
 		}
 
 		// in case of a miss, one minor price is taken off the board
-		minor--
+		// at least it should be, this can be toggled off by a rule alteration
+		if !s.ruleAlterations.DontRemoveHitTargets {
+			minor--
+		}
+
 		// after 3, 6, and 9 attempts the weight for the major prize is increased
-		switch attempts {
-		case 3:
-			major = 5
-		case 6:
-			major = 10
-		case 9:
-			major = 30
+		// this can be toggled off by a rule alteration
+		if !s.ruleAlterations.NoPromisedWeightIncrease {
+			switch attempts {
+			case 3:
+				major = 5
+			case 6:
+				major = 10
+			case 9:
+				major = 30
+			}
 		}
 	}
 }
